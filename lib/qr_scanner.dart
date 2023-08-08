@@ -20,42 +20,57 @@ class _QrScannerPageState extends State<QrScannerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // Navigate back when back arrow is pressed
+          },
+        ),
+      ),
       body: Stack(
         children: [
           Positioned.fill(
+            child: MobileScanner(
+              onDetect: (barcodes) {
+                if (!isScanCompleted) {
+                  isScanCompleted = true;
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ResultPage(),
+                    ),
+                  );
+                }
+              },
+            ),
+          ),
+          Positioned.fill(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Text(
+                  "Arahkan Kamera \nkamu ke Qr Code",
+                  style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontSize: 24,
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 30),
                 Container(
-                  padding: EdgeInsets.all(10),
-                  child: Text(
-                    "Arahkan Kamera \nkamu ke Qr Code",
-                    style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 24,
-                      color: Colors.black,
-                    ),
+                  height: 210,
+                  width: 210,
+                  child: Image(
+                    image: AssetImage("images/qrsquare.png"),
+                    fit: BoxFit.cover,
                   ),
                 ),
-                Expanded(
-                  child: Container(
-                    color: Colors.black,
-                    child: MobileScanner(
-                      onDetect: (barcodes) {
-                        if (!isScanCompleted) {
-                          isScanCompleted = true;
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ResultPage(),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ),
-                Container(height: 60), // Adjust the height as needed
               ],
             ),
           ),
@@ -64,4 +79,3 @@ class _QrScannerPageState extends State<QrScannerPage> {
     );
   }
 }
-
